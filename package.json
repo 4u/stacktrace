@@ -25,6 +25,6 @@
     "bin": "./bin"
   },
   "bin": {
-    "aralot": "./bin/stacktrace"
+    "stacktrace": "./bin/stacktrace"
   }
 }
