@@ -1,0 +1,46 @@
+#!/usr/bin/env node
+
+var fs = require('fs');
+var SourceMaps = require('../lib/sourcemaps').SourceMaps;
+var stackTrace = require('../lib/stacktrace');
+var optimist = require('optimist')
+  .usage('Autogenerator for ota project.\nUsage: $0 command type [flags]')
+  .boolean('cache')
+  .default('cache', true)
+  .describe('cache', 'Use if you want to drop cached files')
+  .describe('file', 'Use if you want to set file')
+  .describe('prefix', 'Use if you want to drop cached files')
+  .describe('target', 'Target to save file')
+  .describe('plovrfile', 'RegExp for filename with plovr configs')
+  .describe('help', 'Show this text');
+var argv = optimist.argv;
+
+var stack = argv._[0];
+var file = argv.file;
+if (file) {
+  stack = fs.readFileSync(file).toString();
+}
+
+if (stack) {
+  var urlPrefix = stack.match(/(https?:\/\/[^/ $]+)/);
+  if (!urlPrefix) {
+    throw new Error("Can't recognize url prefix in stack:\n%s", stack);
+  }
+  var sourcemaps = new SourceMaps(urlPrefix[0]);
+  if (!argv.cache) {
+    sourcemaps.clearCache();
+  }
+  if (argv.plovrfile) {
+    sourcemaps.setOffsetPattern(new RegExp(argv.plovrfile), 3);
+  }
+  stackTrace.parse(stack, sourcemaps, function(err, data) {
+    if (err) throw err;
+    if (argv.target) {
+      fs.writeFileSync(argv.target, stackTrace.stringify(data));
+    } else {
+      console.log(stackTrace.stringify(data));
+    }
+  });
+} else {
+  console.log('Nothing to process');
+}
