@@ -1,30 +1,23 @@
 {
   "name": "stacktrace",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Show compiled stack",
-  "keywords": ["google closure", "ota"],
+  "keywords": [
+    "google closure",
+    "ota"
+  ],
   "author": {
     "name": "Max Nikitin",
     "email": "max@rururu.me"
   },
-  "preferGlobal": true,
   "private": true,
   "dependencies": {
-    "async": ">= 0.2.9",
-    "optimist": ">= 0.6.0",
-    "mapstrace": ">= 1.0.0",
-    "source-map": "0.1.25",
-    "sprintf-js": "0.0.7",
-    "stack-trace": "0.0.6"
+    "async": "^0.9.0",
+    "optimist": "^0.6.1",
+    "source-map": "^0.3.0"
   },
   "engines": {
     "node": ">= 0.10.0"
   },
-  "repository": "git://github.com/4u/stacktrace.git",
-  "directories": {
-    "bin": "./bin"
-  },
-  "bin": {
-    "stacktrace": "./bin/stacktrace"
-  }
+  "repository": "git://github.com/4u/stacktrace.git"
 }

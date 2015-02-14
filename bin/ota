@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+
+var fs = require('fs');
+var lib = require('../lib');
+var optimist = require('optimist')
+  .usage('Stacktrace parser via sourcemaps.\nUsage: $0 command type [flags]')
+  .describe('stack', 'Stacktrace')
+  .describe('file', 'Source file of stacktrace');
+
+var parser = new lib.Parser(lib.Parser.PredefinedOptions.OTA);
+// parser.setSourcemapErrorsIgnored(true);
+
+var trace = optimist.argv.stack;
+if (optimist.argv.file) {
+  trace = fs.readFileSync(optimist.argv.file).toString();
+}
+
+if (!trace) {
+  throw new Error('Nothing to process. Please, use --stack or --file flag.');
+}
+
+parser.parse(trace.trim(), function(err, data) {
+  if (err) throw err;
+  process.stdout.write(lib.formatter(data));
+});
